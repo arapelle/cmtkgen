@@ -99,7 +99,7 @@ def create_project_cmakelists(project_cmakelists_path:str, project_name:str, pro
         content = "\n\
 cmake_minimum_required(VERSION {cmake_major}.{cmake_minor})\n\
 \n\
-list(PREPEND CMAKE_MODULE_PATH ${{CMAKE_SOURCE_DIR}}/cmake/include)\n\
+list(PREPEND CMAKE_MODULE_PATH ${{CMAKE_SOURCE_DIR}}/cmake/)\n\
 \n\
 # Standard includes\n\
 include(CMakePrintHelpers)\n\
@@ -313,7 +313,11 @@ print("Create dir '{}'".format(project_name))
 os.makedirs(project_name)
 
 # Copy cmtk cmake tools
-shutil.copytree(python_current_dir + "/cmake", project_name + "/cmake")
+os.makedirs("{proot}/cmake".format(proot=project_name))
+subprocess.run("git init".split(), cwd=project_name)
+subprocess.run("git submodule add -b {gitbranch} {gitrepo} cmake/cmtk".format(proot=project_name, \
+               gitbranch="master", gitrepo="https://github.com/arapelle/cmtk").split(), \
+               cwd=project_name)
 
 # Create project directory tree
 include_dir = "include"
