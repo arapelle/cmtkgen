@@ -30,7 +30,7 @@ def library_project_cmakelists_contents(project_cmakelists_path:str, project_nam
                                         cmake_major:str, cmake_minor:str, build_in_tree_allowed:bool, \
                                         create_version_header:bool, cmake_project_config_type:str,
                                         cpp_version:str):
-    contents = project_cmakelists_contents(project_cmakelists_path, project_name, project_version, \
+    contents = project_cmakelists_contents("CppLibraryProject", project_cmakelists_path, project_name, project_version, \
                                            cmake_major, cmake_minor, build_in_tree_allowed)
     create_version_header_code = "    VERSION_HEADER \"version.hpp\"\n" if create_version_header else ""
     return contents + "\
@@ -100,9 +100,10 @@ class Cmtk_library_project_creator(Cmtk_shared_project_creator):
         create_example_cmakelists(example_cmakelists_path)
         pass
 
-#-----------
-# Parse args
-#-----------
+#--------------------------------------------------------------------------------
+
+# Script:
+
 argparser = argparse.ArgumentParser()
 argparser.add_argument('project_name', nargs='?', type=str, help='Project name')
 argparser.add_argument('--cmake', metavar='cmake-path', type=str, default="cmake", help='Path or alias to CMake')

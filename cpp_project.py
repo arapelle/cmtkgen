@@ -154,7 +154,7 @@ std::string module_name()\n\
     pass
 
 # project_cmakelists_contents():
-def project_cmakelists_contents(project_cmakelists_path:str, project_name:str, project_version:str, \
+def project_cmakelists_contents(cmtk_include:str, project_cmakelists_path:str, project_name:str, project_version:str, \
                                 cmake_major:str, cmake_minor:str, build_in_tree_allowed:bool):
     check_cmake_binary_dir_code = "check_cmake_binary_dir()\n" if not build_in_tree_allowed else ""
     project_version_code = "        VERSION " + project_version if project_version else '#        VERSION "0.1.0"'
@@ -166,7 +166,7 @@ list(PREPEND CMAKE_MODULE_PATH ${{CMAKE_SOURCE_DIR}}/cmake/)\n\
 # Standard includes\n\
 include(CMakePrintHelpers)\n\
 # Custom include\n\
-include(cmtk/CppLibraryProject)\n\
+include(cmtk/{cmtk_include})\n\
 \n\
 #-----\n\
 # PROJECT\n\
@@ -183,7 +183,8 @@ project({pname}\n\
 #        HOMEPAGE_URL \"\"\n\
         LANGUAGES CXX)\n\
 \n\
-#-----\n".format(pname=project_name, pversion_code=project_version_code, cmake_major=cmake_major, cmake_minor=cmake_minor, \
+#-----\n".format(cmtk_include=cmtk_include, pname=project_name, pversion_code=project_version_code, 
+                 cmake_major=cmake_major, cmake_minor=cmake_minor, \
                  check_cmake_binary_dir_code=check_cmake_binary_dir_code)
 
 #--------
