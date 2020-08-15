@@ -32,18 +32,51 @@ def library_project_cmakelists_contents(project_cmakelists_path:str, project_nam
                                         cpp_version:str):
     contents = project_cmakelists_contents("CppLibraryProject", project_cmakelists_path, project_name, project_version, \
                                            cmake_major, cmake_minor, build_in_tree_allowed)
-    create_version_header_code = "    VERSION_HEADER \"version.hpp\"\n" if create_version_header else ""
+    create_version_header_code = "    OUTPUT_VERSION_HEADER \"version.hpp\"\n" if create_version_header else ""
     return contents + "\
 include(CTest)\n\
 \n\
-add_public_cpp_library(\n\
-{create_version_header_code}\
-    {cmake_project_config_type}_PACKAGE_CONFIG_FILE\n\
-    CXX_STANDARD {cpp_version}\
+# Project options\n\
+library_build_options(${{PROJECT_NAME}} STATIC SHARED EXAMPLE TEST)\n\
+\n\
+# Headers:\n\
+file(GLOB_RECURSE headers\n\
+include/{pname}.hpp\n\
 )\n\
 \n\
+# Sources:\n\
+file(GLOB_RECURSE sources\n\
+src/{pname}.cpp\n\
+)\n\
+\n\
+# Add C++ library\n\
+add_cpp_library(${{PROJECT_NAME}} ${{PROJECT_NAME}}_BUILD_SHARED_LIB ${{PROJECT_NAME}}_BUILD_STATIC_LIB\n\
+    SHARED ${{PROJECT_NAME}}\n\
+    STATIC ${{PROJECT_NAME}}-static\n\
+    CXX_STANDARD {cpp_version}\n\
+    INCLUDE_DIRECTORIES include\n\
+{create_version_header_code}\
+    HEADERS ${{headers}}\n\
+    SOURCES ${{sources}}\n\
+    BUILT_TARGETS project_targets\n\
+    )\n\
+\n\
+# Install library\n\
+install_cpp_library(${{PROJECT_NAME}} ${{project_targets}}\n\
+    {cmake_project_config_type}_PACKAGE_CONFIG_FILE\n\
+    INCLUDE_DIRECTORY include\n\
+    )\n\
+\n\
+if(${{PROJECT_NAME}}_BUILD_EXAMPLES)\n\
+    add_subdirectory(example)\n\
+endif()\n\
+\n\
+if(${{PROJECT_NAME}}_BUILD_TESTS AND BUILD_TESTING)\n\
+    add_subdirectory(test)\n\
+endif()\n\
+\n\
 #-----\n".format(create_version_header_code=create_version_header_code, cmake_project_config_type=cmake_project_config_type, \
-                 cpp_version=cpp_version)
+                 cpp_version=cpp_version, pname=project_name)
 
 # create_project_cmakelists()
 def create_project_cmakelists(project_cmakelists_path:str, project_name:str, project_version:str, \
@@ -98,6 +131,7 @@ class Cmtk_library_project_creator(Cmtk_shared_project_creator):
         # Write project/example/CMakeLists.txt
         example_cmakelists_path = "{proot}/{example}/CMakeLists.txt".format(proot=self._project_name, example="example")
         create_example_cmakelists(example_cmakelists_path)
+        super()._create_files()
         pass
 
 #--------------------------------------------------------------------------------

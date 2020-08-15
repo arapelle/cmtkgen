@@ -158,14 +158,12 @@ def project_cmakelists_contents(cmtk_include:str, project_cmakelists_path:str, p
                                 cmake_major:str, cmake_minor:str, build_in_tree_allowed:bool):
     check_cmake_binary_dir_code = "check_cmake_binary_dir()\n" if not build_in_tree_allowed else ""
     project_version_code = "        VERSION " + project_version if project_version else '#        VERSION "0.1.0"'
-    return "\n\
+    return "\
 cmake_minimum_required(VERSION {cmake_major}.{cmake_minor})\n\
 \n\
 list(PREPEND CMAKE_MODULE_PATH ${{CMAKE_SOURCE_DIR}}/cmake/)\n\
 \n\
-# Standard includes\n\
 include(CMakePrintHelpers)\n\
-# Custom include\n\
 include(cmtk/{cmtk_include})\n\
 \n\
 #-----\n\
@@ -182,6 +180,10 @@ project({pname}\n\
 #        DESCRIPTION \"\"\n\
 #        HOMEPAGE_URL \"\"\n\
         LANGUAGES CXX)\n\
+\n\
+message(STATUS \"BUILD   : ${{CMAKE_BUILD_TYPE}}\")\n\
+message(STATUS \"CPPCOMP : ${{CMAKE_CXX_COMPILER}} ${{CMAKE_CXX_COMPILER_VERSION}}\")\n\
+message(STATUS \"PROJECT : ${{PROJECT_NAME}} ${{PROJECT_VERSION}}\")\n\
 \n\
 #-----\n".format(cmtk_include=cmtk_include, pname=project_name, pversion_code=project_version_code, 
                  cmake_major=cmake_major, cmake_minor=cmake_minor, \
