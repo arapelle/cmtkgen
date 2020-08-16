@@ -14,15 +14,21 @@ python_current_dir = os.path.dirname(os.path.realpath(__file__))
 #--------------------------------------------------------------------------------
 
 # create_test_cmakelists()
-def create_test_cmakelists(test_cmakelists_path:str):
+def create_test_cmakelists(project_name:str, test_cmakelists_path:str):
     with open(test_cmakelists_path, "w") as test_cmakelists_file:
-        content = "\nadd_public_cpp_library_tests(${PROJECT_NAME})\n"
+        content = "\
+add_cpp_library_tests(SHARED ${{PROJECT_NAME}}\n\
+                      STATIC ${{PROJECT_NAME}}-static\n\
+                      SOURCES {pname}_tests.cpp)\n".format(pname=project_name)
         test_cmakelists_file.write(content)
 
 # create_example_cmakelists()
-def create_example_cmakelists(example_cmakelists_path:str):
+def create_example_cmakelists(project_name:str, example_cmakelists_path:str):
     with open(example_cmakelists_path, "w") as example_cmakelists_file:
-        content = "\nadd_public_cpp_library_examples(${PROJECT_NAME})\n"
+        content = "\
+add_cpp_library_examples(SHARED ${{PROJECT_NAME}}\n\
+                         STATIC ${{PROJECT_NAME}}-static\n\
+                         SOURCES {pname}_example.cpp)\n".format(pname=project_name)
         example_cmakelists_file.write(content)
 
 # library_project_cmakelists_contents():
@@ -126,12 +132,50 @@ class Cmtk_library_project_creator(Cmtk_shared_project_creator):
                                   self._cml_build_in_tree_allowed, self._cml_create_version_header, \
                                   self._cml_cmake_project_config_type, self._cml_cpp_version)
         # Write project/test/CMakeLists.txt
+        test_source_path = "{proot}/{test}/{proot}_tests.cpp".format(proot=self._project_name, test="test")
+        self.__create_test_file(test_source_path)
         test_cmakelists_path = "{proot}/{test}/CMakeLists.txt".format(proot=self._project_name, test="test")
-        create_test_cmakelists(test_cmakelists_path)
+        create_test_cmakelists(self._project_name, test_cmakelists_path)
         # Write project/example/CMakeLists.txt
+        example_source_path = "{proot}/{example}/{proot}_example.cpp".format(proot=self._project_name, example="example")
+        self.__create_example_file(example_source_path)
         example_cmakelists_path = "{proot}/{example}/CMakeLists.txt".format(proot=self._project_name, example="example")
-        create_example_cmakelists(example_cmakelists_path)
+        create_example_cmakelists(self._project_name, example_cmakelists_path)
         super()._create_files()
+        pass
+
+    def __create_test_file(self, test_source_path:str):
+        with open(test_source_path, "w") as test_source_file:
+            content = "\
+#include <{pname}/{pname}.hpp>\n\
+#include <gtest/gtest.h>\n\
+#include <cstdlib>\n\
+\n\
+TEST({pname}_tests, basic_test)\n\
+{{\n\
+    ASSERT_EQ(module_name(), \"{pname}\");\n\
+}}\n\
+\n\
+int main(int argc, char** argv)\n\
+{{\n\
+    ::testing::InitGoogleTest(&argc, argv);\n\
+    return RUN_ALL_TESTS();\n\
+}}\n".format(pname=self._project_name)
+            test_source_file.write(content)
+        pass
+
+    def __create_example_file(self, example_source_path:str):
+        with open(example_source_path, "w") as example_source_file:
+            content = "\
+#include <iostream>\n\
+#include <{pname}/{pname}.hpp>\n\
+\n\
+int main()\n\
+{{\n\
+    std::cout << module_name() << std::endl;\n\
+    return EXIT_SUCCESS;\n\
+}}\n".format(pname=self._project_name)
+            example_source_file.write(content)
         pass
 
 #--------------------------------------------------------------------------------
