@@ -38,12 +38,29 @@ def executable_project_cmakelists_contents(project_cmakelists_path:str, project_
     return contents + "\
 include(CTest)\n\
 \n\
-add_public_cpp_executable(\n\
-{create_version_header_code}\
-    CXX_STANDARD {cpp_version}\
+# Headers:\n\
+set(headers\n\
+include/{pname}/{pname}.hpp\n\
 )\n\
 \n\
-#-----\n".format(create_version_header_code=create_version_header_code, cpp_version=cpp_version)
+# Sources:\n\
+set(sources\n\
+    src/{pname}.cpp\n\
+    src/main.cpp\n\
+)\n\
+\n\
+# Add C++ library\n\
+add_cpp_executable(${{PROJECT_NAME}}\n\
+    CXX_STANDARD {cpp_version}\n\
+    INCLUDE_DIRECTORIES include\n\
+{create_version_header_code}\
+    HEADERS ${{headers}}\n\
+    SOURCES ${{sources}}\n\
+    )\n\
+\n\
+install(TARGETS ${{PROJECT_NAME}} EXPORT ${{PROJECT_NAME}})\n\
+\n\
+#-----\n".format(pname=project_name, create_version_header_code=create_version_header_code, cpp_version=cpp_version)
 
 # create_project_cmakelists()
 def create_project_cmakelists(project_cmakelists_path:str, project_name:str, project_version:str, \
