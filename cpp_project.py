@@ -131,13 +131,16 @@ build/\n\
         gitignore_file.write(content)
 
 # create_project_header_file()
-def create_project_header_file(header_file_path:str):
+def create_project_header_file(header_file_path:str, project_name:str="", honly:str=False):
     with open(header_file_path, "w") as header_file:
         content = "#pragma once \n\
 \n\
 #include <string>\n\
-\n\
-std::string module_name();\n"
+\n"
+        if honly:
+            content += "inline std::string module_name() {{ return \"{pname}\"; }}\n".format(pname=project_name)
+        else:
+            content += "std::string module_name();\n"
         header_file.write(content)
     pass
 
