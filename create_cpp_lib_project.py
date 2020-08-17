@@ -68,10 +68,10 @@ add_cpp_library(${{PROJECT_NAME}} ${{PROJECT_NAME}}_BUILD_SHARED_LIB ${{PROJECT_
     )\n\
 \n\
 # Install library\n\
-install_cpp_library(${{PROJECT_NAME}} ${{project_targets}}\n\
-    {cmake_project_config_type}_PACKAGE_CONFIG_FILE\n\
-    INCLUDE_DIRECTORY include\n\
-    )\n\
+install_cpp_library_targets(${{PROJECT_NAME}} include ${{project_targets}})\n\
+install_package(${{PROJECT_NAME}}\n\
+                {cmake_project_config_type}_PACKAGE_CONFIG_FILE\n\
+                EXPORT_NAMES ${{PROJECT_NAME}})\n\
 \n\
 if(${{PROJECT_NAME}}_BUILD_EXAMPLES)\n\
     add_subdirectory(example)\n\
