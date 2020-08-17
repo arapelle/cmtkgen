@@ -40,7 +40,7 @@ include(CTest)\n\
 \n\
 # Headers:\n\
 set(headers\n\
-include/{pname}/{pname}.hpp\n\
+    include/{pname}/{pname}.hpp\n\
 )\n\
 \n\
 # Sources:\n\
