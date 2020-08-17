@@ -46,12 +46,12 @@ include(CTest)\n\
 library_build_options(${{PROJECT_NAME}} STATIC SHARED EXAMPLE TEST)\n\
 \n\
 # Headers:\n\
-file(GLOB_RECURSE headers\n\
-include/{pname}.hpp\n\
+set(headers\n\
+include/{pname}/{pname}.hpp\n\
 )\n\
 \n\
 # Sources:\n\
-file(GLOB_RECURSE sources\n\
+set(sources\n\
 src/{pname}.cpp\n\
 )\n\
 \n\
