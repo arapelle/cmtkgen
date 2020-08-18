@@ -41,7 +41,7 @@ def library_project_cmakelists_contents(project_cmakelists_path:str, project_nam
 include(CTest)\n\
 \n\
 # Project options\n\
-library_build_options(${{PROJECT_NAME}} STATIC SHARED EXAMPLE TEST)\n\
+library_build_options(${{PROJECT_NAME}} HEADER_ONLY EXAMPLE TEST)\n\
 \n\
 # Add C++ library\n\
 add_cpp_honly_library(${{PROJECT_NAME}}\n\
@@ -50,8 +50,12 @@ add_cpp_honly_library(${{PROJECT_NAME}}\n\
 {create_version_header_code}\
     )\n\
 \n\
-# Install library\n\
-install_cpp_library_targets(${{PROJECT_NAME}} include ${{PROJECT_NAME}})\n\
+# Install C++ library\n\
+install_cpp_library_targets(${{PROJECT_NAME}} ${{PROJECT_NAME}}\n\
+                            INCLUDE_DIRECTORIES \"include/${{PROJECT_NAME}}\"\n\
+                            )\n\
+\n\
+# Install package\n\
 install_package(${{PROJECT_NAME}}\n\
                 {cmake_project_config_type}_PACKAGE_CONFIG_FILE\n\
                 EXPORT_NAMES ${{PROJECT_NAME}})\n\
