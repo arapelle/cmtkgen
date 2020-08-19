@@ -68,7 +68,8 @@ add_cpp_library(${{PROJECT_NAME}} ${{PROJECT_NAME}}_BUILD_SHARED_LIB ${{PROJECT_
     )\n\
 \n\
 # Install C++ library\n\
-install_cpp_library_targets(${{PROJECT_NAME}} ${{project_targets}}\n\
+install_cpp_library_targets(${{PROJECT_NAME}}\n\
+                            TARGETS ${{project_targets}}\n\
                             INCLUDE_DIRECTORIES \"include/${{PROJECT_NAME}}\"\n\
                             )\n\
 \n\
