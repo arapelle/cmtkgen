@@ -292,7 +292,7 @@ class Cmtk_project_creator:
         subprocess.run("git init".split(), cwd=self._project_name)
         # Copy cmtk cmake tools
         subprocess.run("git submodule add -b {gitbranch} {gitrepo} cmake/cmtk".format(proot=self._project_name, \
-                    gitbranch="release/0.1.0", gitrepo="https://github.com/arapelle/cmtk").split(), \
+                    gitbranch="release/0.1.1", gitrepo="https://github.com/arapelle/cmtk").split(), \
                     cwd=self._project_name)
         pass
 
