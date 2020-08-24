@@ -317,11 +317,12 @@ class Cmtk_project_creator:
         pass
 
     def __init_git(self):
+        cmtk_version = "0.1.2"
         os.makedirs("{proot}/cmake".format(proot=self._project_name))
         subprocess.run("git init".split(), cwd=self._project_name)
         # Copy cmtk cmake tools
         subprocess.run("git submodule add -b {gitbranch} {gitrepo} cmake/cmtk".format(proot=self._project_name, \
-                    gitbranch="release/0.1.1", gitrepo="https://github.com/arapelle/cmtk").split(), \
+                    gitbranch="release/{}".format(cmtk_version), gitrepo="https://github.com/arapelle/cmtk").split(), \
                     cwd=self._project_name)
         pass
 
