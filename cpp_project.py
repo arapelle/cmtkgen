@@ -55,6 +55,27 @@ def create_cmake_quick_install(cmake_quick_install_path:str, project_name:str):
     with open(cmake_quick_install_path, "w") as cmake_quick_install_file:
         content="# cmake -P cmake_quick_install.cmake\n\
 \n\
+function(get_script_args script_args)\n\
+    set(sc_args)\n\
+    set(start_found False)\n\
+    foreach(argi RANGE ${{CMAKE_ARGC}})\n\
+        set(arg ${{CMAKE_ARGV${{argi}}}})\n\
+        if(start_found)\n\
+            list(APPEND sc_args ${{arg}})\n\
+        endif()\n\
+        if(\"${{arg}}\" STREQUAL \"--\")\n\
+            set(start_found True)\n\
+        endif()\n\
+    endforeach()\n\
+    set(${{script_args}} ${{sc_args}} PARENT_SCOPE)\n\
+endfunction()\n\
+\n\
+get_script_args(args)\n\
+set(options \"\")\n\
+set(params DIR BUILD)\n\
+set(lists \"\")\n\
+cmake_parse_arguments(ARG \"${{options}}\" \"${{params}}\" \"${{lists}}\" ${{args}})\n\
+\n\
 set(project \"{project_name}\")\n\
 \n\
 if(WIN32)\n\
@@ -76,7 +97,15 @@ if(EXISTS ${{error_file}})\n\
 endif()\n\
 \n\
 message(STATUS \"*  CONFIGURATION\")\n\
-execute_process(COMMAND ${{CMAKE_COMMAND}} -DCMAKE_BUILD_TYPE=${{CMAKE_BUILD_TYPE}} -S ${{src_dir}} -B ${{build_dir}}  RESULT_VARIABLE cmd_res)\n\
+if(ARG_BUILD)\n\
+    list(APPEND conf_args -DCMAKE_BUILD_TYPE=${{ARG_BUILD}})\n\
+else()\n\
+    list(APPEND conf_args -DCMAKE_BUILD_TYPE=${{CMAKE_BUILD_TYPE}})\n\
+endif()\n\
+if(ARG_DIR)\n\
+    list(APPEND conf_args -DCMAKE_INSTALL_PREFIX=${{ARG_DIR}})\n\
+endif()\n\
+execute_process(COMMAND ${{CMAKE_COMMAND}} ${{conf_args}} -S ${{src_dir}} -B ${{build_dir}}  RESULT_VARIABLE cmd_res)\n\
 if(NOT cmd_res EQUAL 0)\n\
     file(TOUCH ${{error_file}})\n\
     return()\n\
