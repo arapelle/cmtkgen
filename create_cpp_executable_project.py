@@ -107,6 +107,7 @@ class Cmtk_executable_project_creator(Cmtk_shared_project_creator):
                                   self._cmake.metadata().major_version(), self._cmake.metadata().minor_version(), \
                                   self._cml_build_in_tree_allowed, self._cml_create_version_header, \
                                   self._cml_cpp_version)
+        super()._create_files()
         pass
 
 #--------------------------------------------------------------------------------
