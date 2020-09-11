@@ -4,7 +4,7 @@ Python scripts which create C++ CMake projects based on [CMTK](https://github.co
 
 See the [task board](https://app.gitkraken.com/glo/board/X0RDeiQxbQAR6DqV) for future updates and features.
 
-<u>Current version</u>: 0.2.6
+<u>Current version</u>: 0.2.7
 
 # Requirements
 
