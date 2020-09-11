@@ -103,7 +103,7 @@ class Cmtk_honly_library_project_creator(Cmtk_shared_project_creator):
 
     def _create_dir_tree(self):
         super()._create_dir_tree()
-        for subdir in [self.project_include_dir(), "test", "example"]:
+        for subdir in [self.project_include_dir(), "test", "example", "example/basic_cmake_project"]:
             self._create_subdir(subdir)
 
     def _create_files(self):
@@ -126,6 +126,11 @@ class Cmtk_honly_library_project_creator(Cmtk_shared_project_creator):
         self.__create_example_file(example_source_path)
         example_cmakelists_path = "{proot}/{example}/CMakeLists.txt".format(proot=self._project_name, example="example")
         create_example_cmakelists(self._project_name, example_cmakelists_path)
+        # Write project/example/basic_cmake_project/CMakeLists.txt
+        cmake_example_source_path = "{proot}/{example}/main.cpp".format(proot=self._project_name, example="example/basic_cmake_project")
+        self.__create_cmake_example_file(cmake_example_source_path)
+        cmake_example_cmakelists_path = "{proot}/{example}/CMakeLists.txt".format(proot=self._project_name, example="example/basic_cmake_project")
+        self.__create_cmake_example_cmakelists(cmake_example_cmakelists_path)
         super()._create_files()
         pass
 
@@ -161,6 +166,29 @@ int main()\n\
     return EXIT_SUCCESS;\n\
 }}\n".format(pname=self._project_name)
             example_source_file.write(content)
+        pass
+
+    def __create_cmake_example_file(self, example_source_path:str):
+        self.__create_example_file(example_source_path)
+        pass
+
+    def __create_cmake_example_cmakelists(self, example_cmakelists_path:str):
+        with open(example_cmakelists_path, "w") as example_cmakelists_file:
+            content = "cmake_minimum_required(VERSION {cmake_version_major}.{cmake_version_minor})\n\
+\n\
+project(basic_cmake_project)\n\
+\n\
+add_executable(${{PROJECT_NAME}} main.cpp)\n\
+# Find package {pname}:\n\
+find_package({pname} {pversion} CONFIG REQUIRED)\n\
+# Use {pname} release shared target:\n\
+target_link_libraries(${{PROJECT_NAME}} PRIVATE {pname})\n\
+# Use {pname} release static target:\n\
+#target_link_libraries(${{PROJECT_NAME}} PRIVATE {pname}-static)\n\
+\n".format(pname=self._project_name, pversion=self._project_version, \
+           cmake_version_major=self._cmake.metadata().major_version(), \
+           cmake_version_minor=self._cmake.metadata().minor_version())
+            example_cmakelists_file.write(content)
         pass
 
 #--------------------------------------------------------------------------------
