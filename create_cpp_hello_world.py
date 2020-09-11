@@ -39,7 +39,8 @@ def hello_world_project_cmakelists_contents(project_cmakelists_path:str, project
                                            cmake_major:str, cmake_minor:str, build_in_tree_allowed, cpp_version:str):
     contents = project_cmakelists_contents("Project", project_cmakelists_path, project_name, project_version, \
                                            cmake_major, cmake_minor, build_in_tree_allowed)
-    return contents + "add_executable(${{PROJECT_NAME}} main.cpp main.hpp)\n\n\
+    return contents + "add_executable(${{PROJECT_NAME}} main.cpp main.hpp)\n\
+target_compile_features(${{PROJECT_NAME}} PUBLIC cxx_std_{cpp_version})\n\
 #-----\n".format(cpp_version=cpp_version)
 
 # create_project_cmakelists()
