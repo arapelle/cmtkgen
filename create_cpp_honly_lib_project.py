@@ -51,7 +51,8 @@ add_cpp_honly_library(${{PROJECT_NAME}}\n\
     )\n\
 \n\
 # Install C++ library\n\
-install_cpp_library_targets(${{PROJECT_NAME}} ${{PROJECT_NAME}}\n\
+install_cpp_library_targets(${{PROJECT_NAME}}\n\
+                            TARGETS ${{PROJECT_NAME}}\n\
                             INCLUDE_DIRECTORIES \"include/${{PROJECT_NAME}}\"\n\
                             )\n\
 \n\
