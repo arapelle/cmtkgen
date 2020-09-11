@@ -13,6 +13,7 @@ Binaries:
 - CMake 3.16 or later
 - git
 - python 3.1
+- python3-tkinter
 
 # Scripts
 
@@ -106,7 +107,7 @@ cpp_lib/
 To configure, build and install such a project use [cmake_quick_install.cmake](#About cmake_quick_install.cmake) or execute the following commands:
 
 ```
-cmake -S cpp_exec/ -B build
+cmake -S cpp_lib/ -B build
 cmake --build build/
 cmake --install build/
 ```
@@ -153,7 +154,7 @@ cpp_honly/
 To configure, build and install such a project use [cmake_quick_install.cmake](#About cmake_quick_install.cmake) or execute the following commands:
 
 ```
-cmake -S cpp_exec/ -B build
+cmake -S cpp_honly/ -B build
 cmake --build build/
 cmake --install build/
 ```
@@ -181,7 +182,7 @@ cpp_hello_world/
 To configure and build such a project execute use the following commands:
 
 ```
-cmake -S cpp_exec/ -B build
+cmake -S cpp_hello_world/ -B build
 cmake --build build/
 ```
 
