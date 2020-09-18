@@ -50,6 +50,10 @@ add_cpp_honly_library(${{PROJECT_NAME}}\n\
 {create_version_header_code}\
     )\n\
 \n\
+# Link targets:\n\
+# find_package(TBB 2018 REQUIRED CONFIG)\n\
+# cpp_library_targets_link_libraries(${PROJECT_NAME} HEADER_ONLY PUBLIC TBB::tbb)\n\
+\n\
 # Install C++ library\n\
 install_cpp_library_targets(${{PROJECT_NAME}}\n\
                             TARGETS ${{PROJECT_NAME}}\n\
