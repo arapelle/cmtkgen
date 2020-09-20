@@ -75,7 +75,7 @@ install_cpp_library_targets(${{PROJECT_NAME}}\n\
 \n\
 # Link targets:\n\
 # find_package(TBB 2018 REQUIRED CONFIG)\n\
-# cpp_library_targets_link_libraries(${PROJECT_NAME} PUBLIC TBB::tbb)\n\
+# cpp_library_targets_link_libraries(${{PROJECT_NAME}} PUBLIC TBB::tbb)\n\
 \n\
 # Install package\n\
 install_package(${{PROJECT_NAME}}\n\
