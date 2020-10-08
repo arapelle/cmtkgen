@@ -123,6 +123,7 @@ class Cmtk_library_project_creator(Cmtk_shared_project_creator):
         default_cmake_project_config_type = "VERBOSE"
         self._cml_cmake_project_config_type = init_parameter("Project config type (BASIC | VERBOSE | INPUT)", default_cmake_project_config_type, \
                                                              lambda type: type in ["BASIC", "VERBOSE", "INPUT"])
+        self._cmake_project_config_file = ""
         if self._cml_cmake_project_config_type == "INPUT":
             default_cmake_package_config_file = "CMake-package-config.cmake.in"
             self._cmake_project_config_file = init_parameter("Input package config file name?", default_cmake_package_config_file, \
