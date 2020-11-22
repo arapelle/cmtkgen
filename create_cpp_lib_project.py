@@ -246,15 +246,14 @@ target_link_libraries(${{PROJECT_NAME}} PRIVATE {pname})\n\
 
 #--------------------------------------------------------------------------------
 
-# Script:
+if __name__ == "__main__":
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('project_name', nargs='?', type=str, help='Project name')
+    argparser.add_argument('--cmake', metavar='cmake-path', type=str, default="cmake", help='Path or alias to CMake')
+    pargs = argparser.parse_args()
 
-argparser = argparse.ArgumentParser()
-argparser.add_argument('project_name', nargs='?', type=str, help='Project name')
-argparser.add_argument('--cmake', metavar='cmake-path', type=str, default="cmake", help='Path or alias to CMake')
-pargs = argparser.parse_args()
+    cmtkgen = Cmtk_library_project_creator(pargs.cmake)
+    cmtkgen.cmake().check_version()
+    cmtkgen.create_project(pargs.project_name)
 
-cmtkgen = Cmtk_library_project_creator(pargs.cmake)
-cmtkgen.cmake().check_version()
-cmtkgen.create_project(pargs.project_name)
-
-print("EXIT SUCCESS")
+    print("EXIT SUCCESS")

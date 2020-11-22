@@ -1,0 +1,30 @@
+#!/usr/bin/python3
+
+import create_cpp_executable_project as exe_project
+import create_cpp_lib_project as cmtk_lib_project
+import create_cpp_honly_lib_project as hlib_project
+import create_cpp_hello_world as hw_project
+import argparse
+
+def main():
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('project_type', type=str, help='Project type (exe|lib|hlib|hw)', choices=["exe", "lib", "hlib", "hw"])
+    argparser.add_argument('project_name', nargs='?', type=str, help='Project name')
+    argparser.add_argument('--cmake', metavar='cmake-path', type=str, default="cmake", help='Path or alias to CMake')
+    pargs = argparser.parse_args()
+    cmtkgen = None
+    if pargs.project_type == "exe":
+        cmtkgen = exe_project.Cmtk_executable_project_creator(pargs.cmake)
+    elif pargs.project_type == "lib":
+        cmtkgen = cmtk_lib_project.Cmtk_library_project_creator(pargs.cmake)
+    elif pargs.project_type == "hlib":
+        cmtkgen = hlib_project.Cmtk_honly_library_project_creator(pargs.cmake)
+    elif pargs.project_type == "hw":
+        cmtkgen = hw_project.Cmtk_executable_project_creator(pargs.cmake)
+    cmtkgen.cmake().check_version()
+    cmtkgen.create_project(pargs.project_name)
+
+if __name__ == "__main__":
+    main()
+    print("EXIT SUCCESS")
+
