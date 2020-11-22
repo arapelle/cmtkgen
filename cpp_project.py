@@ -317,7 +317,7 @@ class Cmtk_project_creator:
         pass
 
     def __init_git(self):
-        cmtk_version = "0.4.3"
+        cmtk_version = "0.4.4"
         os.makedirs("{proot}/cmake".format(proot=self._project_name))
         subprocess.run("git init".split(), cwd=self._project_name)
         # Copy cmtk cmake tools
