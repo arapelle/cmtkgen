@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from cpp_project import *
+from cmtkgen_lib.cpp_project import *
 import shutil
 import argparse
 import subprocess
@@ -18,6 +18,7 @@ def create_test_cmakelists(project_name:str, test_cmakelists_path:str):
     with open(test_cmakelists_path, "w") as test_cmakelists_file:
         content = "\
 add_cpp_library_tests(SHARED ${{PROJECT_NAME}}\n\
+                      STATIC ${{PROJECT_NAME}}-static\n\
                       SOURCES {pname}_tests.cpp)\n".format(pname=project_name)
         test_cmakelists_file.write(content)
 
@@ -26,6 +27,7 @@ def create_example_cmakelists(project_name:str, example_cmakelists_path:str):
     with open(example_cmakelists_path, "w") as example_cmakelists_file:
         content = "\
 add_cpp_library_examples(SHARED ${{PROJECT_NAME}}\n\
+                         STATIC ${{PROJECT_NAME}}-static\n\
                          SOURCES {pname}_example.cpp)\n".format(pname=project_name)
         example_cmakelists_file.write(content)
 
@@ -44,24 +46,39 @@ def library_project_cmakelists_contents(project_cmakelists_path:str, project_nam
 include(CTest)\n\
 \n\
 # Project options\n\
-library_build_options(${{PROJECT_NAME}} HEADER_ONLY EXAMPLE TEST)\n\
+library_build_options(${{PROJECT_NAME}} STATIC SHARED EXAMPLE TEST)\n\
+\n\
+# Headers:\n\
+set(headers\n\
+include/{pname}/{pname}.hpp\n\
+)\n\
+\n\
+# Sources:\n\
+set(sources\n\
+src/{pname}.cpp\n\
+)\n\
 \n\
 # Add C++ library\n\
-add_cpp_honly_library(${{PROJECT_NAME}}\n\
+add_cpp_library(${{PROJECT_NAME}} ${{PROJECT_NAME}}_BUILD_SHARED_LIB ${{PROJECT_NAME}}_BUILD_STATIC_LIB\n\
+    SHARED ${{PROJECT_NAME}}\n\
+    STATIC ${{PROJECT_NAME}}-static\n\
     CXX_STANDARD {cpp_version}\n\
     INCLUDE_DIRECTORIES include\n\
 {create_version_header_code}\
+    HEADERS ${{headers}}\n\
+    SOURCES ${{sources}}\n\
+    BUILT_TARGETS project_targets\n\
     )\n\
-\n\
-# Link targets:\n\
-# find_package(TBB 2018 REQUIRED CONFIG)\n\
-# cpp_library_targets_link_libraries(${{PROJECT_NAME}} HEADER_ONLY PUBLIC TBB::tbb)\n\
 \n\
 # Install C++ library\n\
 install_cpp_library_targets(${{PROJECT_NAME}}\n\
-                            TARGETS ${{PROJECT_NAME}}\n\
+                            TARGETS ${{project_targets}}\n\
                             INCLUDE_DIRECTORIES \"include/${{PROJECT_NAME}}\"\n\
                             )\n\
+\n\
+# Link targets:\n\
+# find_package(TBB 2018 REQUIRED CONFIG)\n\
+# cpp_library_targets_link_libraries(${{PROJECT_NAME}} PUBLIC TBB::tbb)\n\
 \n\
 # Install package\n\
 install_package(${{PROJECT_NAME}}\n\
@@ -92,7 +109,7 @@ def create_project_cmakelists(project_cmakelists_path:str, project_name:str, pro
 
 #--------------------------------------------------------------------------------
 
-class Cmtk_honly_library_project_creator(Cmtk_shared_project_creator):
+class Cmtk_library_project_creator(Cmtk_shared_project_creator):
     def __init__(self, cmake_path:str):
         super().__init__(cmake_path)
 
@@ -115,13 +132,16 @@ class Cmtk_honly_library_project_creator(Cmtk_shared_project_creator):
 
     def _create_dir_tree(self):
         super()._create_dir_tree()
-        for subdir in [self.project_include_dir(), "test", "example", "example/basic_cmake_project"]:
+        for subdir in [self.project_include_dir(), "src", "test", "example", "example/basic_cmake_project"]:
             self._create_subdir(subdir)
 
     def _create_files(self):
         # Write project header
         header_file_path = "{pname}/{include}/{pname}.hpp".format(include=self.project_include_dir(), pname=self._project_name)
-        create_project_header_file(header_file_path, self._project_name, True)
+        create_project_header_file(header_file_path)
+        # Write project source
+        project_source_file_path = "{pname}/src/{pname}.cpp".format(pname=self._project_name)
+        create_project_source_file(project_source_file_path, self._project_name)
         # Write project/CMakeLists.txt
         project_cmakelists_path = "{proot}/CMakeLists.txt".format(proot=self._project_name)
         create_project_cmakelists(project_cmakelists_path, self._project_name, self._project_version, \
@@ -232,7 +252,7 @@ if __name__ == "__main__":
     argparser.add_argument('--cmake', metavar='cmake-path', type=str, default="cmake", help='Path or alias to CMake')
     pargs = argparser.parse_args()
 
-    cmtkgen = Cmtk_honly_library_project_creator(pargs.cmake)
+    cmtkgen = Cmtk_library_project_creator(pargs.cmake)
     cmtkgen.cmake().check_version()
     cmtkgen.create_project(pargs.project_name)
 
