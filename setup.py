@@ -11,7 +11,7 @@ print(scripts)
 
 setuptools.setup(
     name='cmtkgen',  
-    version='0.8.1',
+    version='0.9',
     scripts=scripts,
     author="Aymeric Pellé",
     author_email="aympelle@gmail.com",
