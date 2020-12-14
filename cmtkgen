@@ -7,7 +7,7 @@ import cmtkgen_lib.create_cpp_hello_world as hw_project
 import argparse
 import sys
 
-CMTKGEN_VERSION:str = "0.8"
+CMTKGEN_VERSION:str = "0.8.1"
 
 def main():
     argparser = argparse.ArgumentParser()
