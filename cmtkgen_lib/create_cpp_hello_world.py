@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from cpp_project import *
+from cmtkgen_lib.cpp_project import *
 import shutil
 import argparse
 import subprocess

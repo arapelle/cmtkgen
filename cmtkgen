@@ -1,13 +1,17 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
-import create_cpp_executable_project as exe_project
-import create_cpp_lib_project as cmtk_lib_project
-import create_cpp_honly_lib_project as hlib_project
-import create_cpp_hello_world as hw_project
+import cmtkgen_lib.create_cpp_executable_project as exe_project
+import cmtkgen_lib.create_cpp_lib_project as cmtk_lib_project
+import cmtkgen_lib.create_cpp_honly_lib_project as hlib_project
+import cmtkgen_lib.create_cpp_hello_world as hw_project
 import argparse
+import sys
+
+CMTKGEN_VERSION:str = "0.8.1"
 
 def main():
     argparser = argparse.ArgumentParser()
+    argparser.add_argument('-v', '--version', action='version', version='%(prog)s version {}'.format(CMTKGEN_VERSION))
     argparser.add_argument('project_type', type=str, help='Project type (exe|lib|hlib|hw)', choices=["exe", "lib", "hlib", "hw"])
     argparser.add_argument('project_name', nargs='?', type=str, help='Project name')
     argparser.add_argument('--cmake', metavar='cmake-path', type=str, default="cmake", help='Path or alias to CMake')
@@ -27,4 +31,3 @@ def main():
 if __name__ == "__main__":
     main()
     print("EXIT SUCCESS")
-
