@@ -7,8 +7,11 @@ import cmtkgen_lib.create_cpp_hello_world as hw_project
 import argparse
 import sys
 
+CMTKGEN_VERSION:str = "0.8"
+
 def main():
     argparser = argparse.ArgumentParser()
+    argparser.add_argument('-v', '--version', action='version', version='%(prog)s version {}'.format(CMTKGEN_VERSION))
     argparser.add_argument('project_type', type=str, help='Project type (exe|lib|hlib|hw)', choices=["exe", "lib", "hlib", "hw"])
     argparser.add_argument('project_name', nargs='?', type=str, help='Project name')
     argparser.add_argument('--cmake', metavar='cmake-path', type=str, default="cmake", help='Path or alias to CMake')
