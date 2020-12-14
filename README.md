@@ -4,16 +4,17 @@ Python scripts which create C++ CMake projects based on [CMTK](https://github.co
 
 See the [task board](https://app.gitkraken.com/glo/board/X0RDeiQxbQAR6DqV) for future updates and features.
 
-<u>Current version</u>: 0.9
-
 # Requirements
 
 Binaries:
 
 - CMake 3.16 or later
 - git
-- python 3.1
+- python 3.6
 - python3-tkinter
+# Install
+
+`pip3 install cmtkgen`
 
 # Scripts
 
